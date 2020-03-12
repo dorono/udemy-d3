@@ -14,7 +14,7 @@ var g = d3.select("#chart-area")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
     .append("g")
-        .attr("transform", "translate(" + margin.left 
+        .attr("transform", "translate(" + margin.left
             + ", " + margin.top + ")");
 
 // X Label
@@ -44,7 +44,7 @@ d3.json("data/buildings.json").then(function(data){
     });
 
     var x = d3.scaleBand()
-        .domain(data.map(function(d){ return d.name; }))
+        .domain(0, data.map(function(d){ return d.name; }))
         .range([0, width])
         .paddingInner(0.3)
         .paddingOuter(0.3);
@@ -77,7 +77,7 @@ d3.json("data/buildings.json").then(function(data){
 
     var rects = g.selectAll("rect")
         .data(data)
-    
+
     rects.enter()
         .append("rect")
             .attr("y", function(d){ return y(d.height); })
