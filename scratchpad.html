@@ -16,15 +16,47 @@
 
 
 
-var min = d3.min(data, function (d) {
-  return d.height; // 2
-});
+// Bars
+// apply the new data to new rects that
+// will appear should we decide to bring
+// them onto our visualization
+var rects = g.selectAll('rect').data(data);
 
-var max = d3.max(data, function (d) {
-  return d.height; // 4
-});
+// remove the rects that are marked
+// with the `exit()` selector
+rects.exit().remove();
 
-var extent = d3.extent(data, function (d) {
-  return d.height; // [2,4]
+// apply attributes to the bars
+// not targeted by `exit()` and
+// therefore, left in our visualization the screen
+rects
+  .attr('y', function(d) {
+    return y(d.revenue);
+  })
+  .attr('x', function(d) {
+    return x(d.month);
+  })
+  .attr('height', function(d) {
+    return height - y(d.revenue);
+  })
+  .attr('width', x.bandwidth);
+
+// and finally, add the new rectangles
+// based on the current data, adding
+// attributes as needed
+rects
+  .enter()
+  .append('rect')
+  .attr('y', function(d) {
+    return y(d.revenue);
+  })
+  .attr('x', function(d) {
+    return x(d.month);
+  })
+  .attr('height', function(d) {
+    return height - y(d.revenue);
+  })
+  .attr('width', x.bandwidth)
+  .attr('fill', 'grey');
 });
 </script>
