@@ -1,62 +1,45 @@
 <html>
-  <style>
-    svg {
-      border: 1px solid black;
-    }
-  </style>
-  <body>
+<style>
+  svg {
+    border: 1px solid black;
+  }
+</style>
 
-<svg width="400" height="200">
-   <path d="M10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80" fill="transparent" stroke="black"></path>
-</svg>
-  </body>
+<body>
+
+  <svg width="400" height="200">
+    <path d="M10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80" fill="transparent" stroke="black"></path>
+  </svg>
+</body>
+
 </html>
 
 <script>
 
+// Add the links (given by calling tree(root), which also adds positional x/y coordinates) for the nodes
+var link = g.selectAll(".link")
+        .data(tree(root).links())
+    .enter().append("path")
+        .attr("class", "link")
+        .attr("d", d3.linkHorizontal()
+            .x(function(d) { return d.y; })
+            .y(function(d) { return d.x; })
+        );
 
+// Add groups for each node in the hierarchy with circles and text labels
+var node = g.selectAll(".node")
+    .data(root.descendants())
+    .enter().append("g")
+        .attr("class", function(d) { return "node" + (d.children ? " node--internal" : " node--leaf"); })
+        .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
 
-// Bars
-// apply the new data to new rects that
-// will appear should we decide to bring
-// them onto our visualization
-var rects = g.selectAll('rect').data(data);
+node.append("circle")
+    .attr("r", 2.5);
 
-// remove the rects that are marked
-// with the `exit()` selector
-rects.exit().remove();
+node.append("text")
+    .attr("dy", 3)
+    .attr("x", function(d) { return d.children ? -8 : 8; })
+    .style("text-anchor", function(d) { return d.children ? "end" : "start"; })
+    .text(function(d) { return d.id.substring(d.id.lastIndexOf(".") + 1); });
 
-// apply attributes to the bars
-// not targeted by `exit()` and
-// therefore, left in our visualization the screen
-rects
-  .attr('y', function(d) {
-    return y(d.revenue);
-  })
-  .attr('x', function(d) {
-    return x(d.month);
-  })
-  .attr('height', function(d) {
-    return height - y(d.revenue);
-  })
-  .attr('width', x.bandwidth);
-
-// and finally, add the new rectangles
-// based on the current data, adding
-// attributes as needed
-rects
-  .enter()
-  .append('rect')
-  .attr('y', function(d) {
-    return y(d.revenue);
-  })
-  .attr('x', function(d) {
-    return x(d.month);
-  })
-  .attr('height', function(d) {
-    return height - y(d.revenue);
-  })
-  .attr('width', x.bandwidth)
-  .attr('fill', 'grey');
-});
 </script>

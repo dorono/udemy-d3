@@ -5,6 +5,7 @@
  */
 
 var margin = {left: 80, right: 20, top: 50, bottom: 100};
+var flag = true;
 
 var width = 600 - margin.left - margin.right,
   height = 400 - margin.top - margin.bottom;
@@ -56,16 +57,20 @@ d3.json('data/revenues.json').then(function(data) {
   // Clean data
   data.forEach(function(d) {
     d.revenue = +d.revenue;
+    d.profit = +d.profit;
   });
 
   d3.interval(function() {
     update(data);
+    flag = !flag;
   }, 1000);
 
   update(data);
 });
 
 function update(data) {
+  var value = flag ? 'revenue' : 'profit';
+
   console.log('data UPDATING!', data);
   // X Scale
   x.domain(
@@ -78,7 +83,7 @@ function update(data) {
   y.domain([
     0,
     d3.max(data, function(d) {
-      return d.revenue;
+      return d[value];
     })
   ]);
 
@@ -105,13 +110,13 @@ function update(data) {
   // therefore, left in our visualization the screen
   rects
     .attr('y', function(d) {
-      return y(d.revenue);
+      return y(d[value]);
     })
     .attr('x', function(d) {
       return x(d.month);
     })
     .attr('height', function(d) {
-      return height - y(d.revenue);
+      return height - y(d[value]);
     })
     .attr('width', x.bandwidth);
 
@@ -122,13 +127,13 @@ function update(data) {
     .enter()
     .append('rect')
     .attr('y', function(d) {
-      return y(d.revenue);
+      return y(d[value]);
     })
     .attr('x', function(d) {
       return x(d.month);
     })
     .attr('height', function(d) {
-      return height - y(d.revenue);
+      return height - y(d[value]);
     })
     .attr('width', x.bandwidth)
     .attr('fill', 'grey');
