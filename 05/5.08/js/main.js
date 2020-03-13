@@ -12,7 +12,7 @@ var width = 600 - margin.left - margin.right,
 var flag = true;
 
 var t = d3.transition().duration(750);
-    
+
 var g = d3.select("#chart-area")
     .append("svg")
         .attr("width", width + margin.left + margin.right)
@@ -89,35 +89,34 @@ function update(data) {
     yAxisGroup.transition(t).call(yAxisCall);
 
     // JOIN new data with old elements.
-    var rects = g.selectAll("circle")
+    var circles = g.selectAll("circle")
         .data(data, function(d){
             return d.month;
         });
 
     // EXIT old elements not present in new data.
-    rects.exit()
+    circles.exit()
         .attr("fill", "red")
     .transition(t)
         .attr("cy", y(0))
         .remove();
 
     // ENTER new elements present in new data...
-    rects.enter()
+    circles.enter()
         .append("circle")
             .attr("fill", "grey")
             .attr("cy", y(0))
             .attr("cx", function(d){ return x(d.month) + x.bandwidth() / 2 })
             .attr("r", 5)
             // AND UPDATE old elements present in new data.
-            .merge(rects)
+            .merge(circles)
             .transition(t)
                 .attr("cx", function(d){ return x(d.month) + x.bandwidth() / 2 })
-                .attr("cy", function(d){ return y(d[value]); });
+                .attr("cy", function(d){ return y(d[value]); })
 
     var label = flag ? "Revenue" : "Profit";
     yLabel.text(label);
 
 }
-
 
 

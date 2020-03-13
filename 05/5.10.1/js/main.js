@@ -5,7 +5,7 @@
 */
 
 var margin = { left:80, right:20, top:50, bottom:100 };
-var height = 500 - margin.top - margin.bottom, 
+var height = 500 - margin.top - margin.bottom,
     width = 800 - margin.left - margin.right;
 
 var g = d3.select("#chart-area")
@@ -13,7 +13,7 @@ var g = d3.select("#chart-area")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
     .append("g")
-        .attr("transform", "translate(" + margin.left + 
+        .attr("transform", "translate(" + margin.left +
             ", " + margin.top + ")");
 
 var time = 0;
@@ -80,7 +80,7 @@ d3.json("data/data.json").then(function(data){
         }).map(function(country){
             country.income = +country.income;
             country.life_exp = +country.life_exp;
-            return country;            
+            return country;
         })
     });
 
@@ -88,7 +88,7 @@ d3.json("data/data.json").then(function(data){
     d3.interval(function(){
         // At the end of our data, loop back
         time = (time < 214) ? time+1 : 0
-        update(formattedData[time]);            
+        update(formattedData[time]);
     }, 100);
 
     // First run of the visualization

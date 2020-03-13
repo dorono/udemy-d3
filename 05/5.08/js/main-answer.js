@@ -1,7 +1,7 @@
 /*
 *    main.js
 *    Mastering Data Visualization with D3.js
-*    5.7 - D3 Transitions
+*    5.8 - Scatter plots in D3
 */
 
 var margin = { left:80, right:20, top:50, bottom:100 };
@@ -11,7 +11,7 @@ var width = 600 - margin.left - margin.right,
 
 var flag = true;
 
-var t = d3.transition().duration(0);
+var t = d3.transition().duration(750);
 
 var g = d3.select("#chart-area")
     .append("svg")
@@ -89,7 +89,7 @@ function update(data) {
     yAxisGroup.transition(t).call(yAxisCall);
 
     // JOIN new data with old elements.
-    var rects = g.selectAll("rect")
+    var rects = g.selectAll("circle")
         .data(data, function(d){
             return d.month;
         });
@@ -98,29 +98,26 @@ function update(data) {
     rects.exit()
         .attr("fill", "red")
     .transition(t)
-        .attr("y", y(0))
-        .attr("height", 0)
+        .attr("cy", y(0))
         .remove();
 
     // ENTER new elements present in new data...
     rects.enter()
-        .append("rect")
+        .append("circle")
             .attr("fill", "grey")
-            .attr("y", y(0))
-            .attr("height", 0)
-            .attr("x", function(d){ return x(d.month) })
-            .attr("width", x.bandwidth)
+            .attr("cy", y(0))
+            .attr("cx", function(d){ return x(d.month) + x.bandwidth() / 2 })
+            .attr("r", 5)
             // AND UPDATE old elements present in new data.
             .merge(rects)
             .transition(t)
-                .attr("x", function(d){ return x(d.month) })
-                .attr("width", x.bandwidth)
-                .attr("y", function(d){ return y(d[value]); })
-                .attr("height", function(d){ return height - y(d[value]); });
+                .attr("cx", function(d){ return x(d.month) + x.bandwidth() / 2 })
+                .attr("cy", function(d){ return y(d[value]); });
 
     var label = flag ? "Revenue" : "Profit";
     yLabel.text(label);
 
 }
+
 
 
